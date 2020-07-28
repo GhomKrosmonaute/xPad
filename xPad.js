@@ -6,8 +6,7 @@ const buttonNames = [
   "LB","RB","LT","RT",
   "BACK","START",
   "L-STICK","R-STICK",
-  "UP","DOWN","LEFT","RIGHT",
-  "MAIN"
+  "UP","DOWN","LEFT","RIGHT"
 ]
 
 const xPad = new EventEmitter3()

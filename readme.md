@@ -1,7 +1,7 @@
 # 🎮 xPad - HTML5 Xbox 360 Gamepad Wrapper
 
-- CDN - [xPad.js](https://raw.githubusercontent.com/CamilleAbella/xPad/master/xPad.js)
-- Online test - Coming soon
+- [Download](https://raw.githubusercontent.com/CamilleAbella/xPad/master/xPad.js)
+- [Live test](https://CamilleAbella.github.io/xPad)
 
 ## Documentation
 

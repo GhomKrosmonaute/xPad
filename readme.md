@@ -1,5 +1,8 @@
 # 🎮 xPad - HTML5 Xbox 360 Gamepad Wrapper
 
+- CDN - [xPad.js](https://raw.githubusercontent.com/CamilleAbella/xPad/master/xPad.js)
+- Online test - Coming soon
+
 ## Documentation
 
 ### xPad => PIXI.EventEmitter

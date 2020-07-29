@@ -5,9 +5,9 @@
 
 ## Documentation
 
-### xPad => PIXI.EventEmitter
+### xPad => PseudoEventEmitter
 
-Event emitter for easily usage.
+Node-like Event emitter for easily usage.
 
 #### Examples
 
@@ -15,7 +15,7 @@ Event emitter for easily usage.
 <body>
   <script src="xPad.js"></script>
   <script>
-    xPad.on("connected", () => {
+    xPad.once("connected", () => {
       console.log("Connected!")
     })
     xPad.on("buttonUpdate", console.log)
@@ -37,9 +37,11 @@ Includes the following buttons like that: `{name: value}`
 #### Examples
 
 ```js
-const LT_Value = xPad.buttons["LT"]
-const LT_IsPressed = LT_Value === 1
-const UP_IsPressed = !!xPad.buttons.UP
+xPad.on("update", () => {
+    const LT_Value = xPad.buttons["LT"]
+    const LT_IsPressed = LT_Value === 1
+    const UP_IsPressed = !!xPad.buttons.UP
+})
 ```
 
 ### xPad.updateInterval => number

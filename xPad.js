@@ -1,18 +1,33 @@
 class XPad {
   
-  constructor(buttonNames) {
-    this.updateInterval = 10
+  constructor(buttonNames, axeNames) {
     this.emitters = {}
+    
     this.buttons = {}
     this.buttonCache = []
     this.buttonNames = buttonNames
+    
+    this.axes = {}
+    this.axeCache = []
+    this.axeNames = axeNames
   
+    this.updateInterval = 10
+    
     this.on("update", () => {
-      this.gamepad.buttons.forEach((b, i) => {
-        const val = XPad.getButtonValue(b)
-        if(this.buttonCache[i] !== val){
-          this.buttonCache[i] = val
-          this.emit("buttonUpdate", this.buttonNames[i], val)
+      this.buttonNames.forEach((n, i) => {
+        const value = XPad.getButtonValue(this.gamepad.buttons[i])
+        if(this.buttonCache[i] !== value){
+          this.buttonCache[i] = value
+          this.buttons[n] = value
+          this.emit("buttonUpdate", n, value)
+        }
+      })
+      this.axeNames.forEach((n, i) => {
+        const value = this.gamepad.axes[i]
+        if(this.axeCache[i] !== value){
+          this.axeCache[i] = value
+          this.axes[n] = value
+          this.emit("axeUpdate", n, value)
         }
       })
     })
@@ -23,9 +38,12 @@ class XPad {
           this.buttonCache[i] = XPad.getButtonValue(event.gamepad.buttons[i])
           this.buttons[name] = this.buttonCache[i]
         })
+        this.axeNames.forEach((name, i) => {
+          this.axeCache[i] = event.gamepad.axes[i]
+          this.axes[name] = this.axeCache[i]
+        })
         this.update = setInterval(() => this.emit("update"), this.updateInterval)
         this.gamepad = event.gamepad
-        this.connected = true
         this.emit("connected")
       }
     });
@@ -33,11 +51,14 @@ class XPad {
     window.addEventListener("gamepaddisconnected", (event) => {
       if(event.gamepad === this.gamepad) {
         clearInterval(this.update)
-        this.gamepad = false
-        this.connected = false
+        this.gamepad = null
         this.emit("disconnected")
       }
     });
+  }
+  
+  get connected() {
+    return !!this.gamepad
   }
   
   on(eventName, callback){
@@ -53,14 +74,15 @@ class XPad {
   }
   
   emit(eventName, ...args){
-    this.emitters[eventName] = this.emitters[eventName]
-      .filter(callback => {
-        callback(...args)
-        return !callback.onlyOneTime
-      })
+    if(this.emitters.hasOwnProperty(eventName))
+      this.emitters[eventName] = this.emitters[eventName]
+        .filter(callback => {
+          callback(...args)
+          return !callback.onlyOneTime
+        })
   }
   
-  static getButtonValue( b ) {
+  static getButtonValue(b) {
     return (typeof b == 'number') ? b : b.value
   }
 }
@@ -72,4 +94,7 @@ const xPad = new XPad([
   "BACK","START",
   "L-STICK","R-STICK",
   "UP","DOWN","LEFT","RIGHT"
+],[
+  "LEFT-X","LEFT-Y",
+  "RIGHT-X","RIGHT-Y"
 ])

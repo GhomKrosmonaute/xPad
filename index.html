@@ -7,30 +7,51 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
   <title>xPad live test</title>
+  <style>
+    .stick {
+      width: 80px;
+      height: 80px;
+    }
+    .stick > div {
+      position: relative;
+      transition: all 100ms ease;
+      transform: translate(-50%,-50%);
+      top: 50%;
+      left: 50%;
+      width: 30px;
+      height: 30px;
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-dark bg-dark d-flex">
-    <span class="navbar-brand font-weight-bolder">🎮 xPad</span>
-    <div class="flex-grow-1"></div>
-    <div class="btn-group" role="group" aria-label="Basic example">
-      <a class="btn btn-light" href="https://CamilleAbella.github.io" role="button">Author</a>
-      <a class="btn btn-primary" href="https://raw.githubusercontent.com/CamilleAbella/xPad/master/xPad.js" role="button">Get Lib</a>
-      <a class="btn btn-info" href="https://github.com/CamilleAbella/xPad" role="button">Docs</a>
-    </div>
-  </nav>
-  <div id="detection" class="alert text-center alert-danger">
+  <div id="detection" class="alert text-center alert-danger m-0 p-1">
     Xbox Controller not detected! (try to press some gamepad button)
   </div>
-  <h1 class="display-2 text-center">Live test</h1>
+  <nav class="navbar navbar-light bg-light d-flex justify-content-center m-0 shadow-sm">
+    <span class="navbar-brand font-weight-bolder text-dark text">🎮 xPad</span>
+    <span class="flex-grow-1"></span>
+    <div class="btn-group" role="group" aria-label="Basic example">
+      <a class="btn btn-outline-dark" href="https://CamilleAbella.github.io" role="button">Author</a>
+      <a class="btn btn-outline-dark" href="https://raw.githubusercontent.com/CamilleAbella/xPad/master/xPad.js" role="button">Get Lib</a>
+      <a class="btn btn-outline-dark" href="https://github.com/CamilleAbella/xPad" role="button">Docs</a>
+    </div>
+  </nav>
   <div class="container">
     <div class="row">
-      <div class="col-sm">
+      <div class="col-sm pt-4">
         <h2>Buttons</h2>
         <div id="buttons" class="d-flex flex-wrap"></div>
       </div>
-      <div class="col-sm">
+      <div class="col-sm pt-4">
         <h2>Axis</h2>
-        <div id="axis" class="d-flex flex-wrap">[ Coming soon ]</div>
+        <div id="axis" class="d-flex flex-wrap">
+          <div class="m-1 stick LEFT rounded shadow-sm">
+            <div class="rounded shadow-sm bg-secondary"></div>
+          </div>
+          <div class="m-1 stick RIGHT rounded shadow-sm">
+            <div class="rounded shadow-sm bg-secondary"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -43,24 +64,33 @@
       axis = document.getElementById("axis")
 
     xPad.on("connected", () => {
-      detection.className = "alert text-center alert-success"
+      detection.className = "alert text-center alert-success m-0 p-1"
       detection.innerText = "Xbox Controller detected :)"
     })
 
     xPad.on("disconnected", () => {
-      detection.className = "alert text-center alert-danger"
+      detection.className = "alert text-center alert-danger m-0 p-1"
       detection.innerText = "Xbox Controller disconnected!"
     })
 
     xPad.on("buttonUpdate", (name, value) => {
       const button = document.getElementById(name)
-      if(value === 0){
-        button.className = "m-1 badge badge-dark"
-      }else if(value === 1){
-        button.className = "m-1 badge badge-success"
-      }else{
-        button.className = "m-1 badge badge-secondary"
+      if(button){
+        if(value === 0){
+          button.className = "m-1 badge badge-dark"
+        }else if(value === 1){
+          button.className = "m-1 badge badge-success"
+        }else{
+          button.className = "m-1 badge badge-secondary"
+        }
       }
+    })
+
+    xPad.on("axeUpdate", (name, value) => {
+      const prop = name.includes("X") ? "left" : "top"
+      const side = name.includes("RIGHT") ? "RIGHT" : "LEFT"
+      const stick = document.querySelector(".stick." + side + " > div")
+      stick.style[prop] = String(50 + 50 * value) + "%"
     })
 
     xPad.buttonNames.forEach(name => {

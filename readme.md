@@ -17,8 +17,16 @@ Node-like Event emitter for easily usage.
 - ``buttonUpdate``: *button value changed*
   - arg[0] ``name``: *name of changed button*
   - arg[1] ``value``: *value of changed button*
+  - arg[2] ``index``: *index of changed button*
 - ``axeUpdate``: *axis value changed*
   - arg[0] ``name``: *name of changed axe*
+  - arg[1] ``value``: *value of changed axe*
+  - arg[2] ``index``: *index of changed axe*
+- ``leftStickUpdate``: *left stick axe value changed*
+  - arg[0] ``axe``: *orientation of changed axe (``x`` or ``y``)*
+  - arg[1] ``value``: *value of changed axe*
+- ``rightStickUpdate``: *right stick axe value changed*
+  - arg[0] ``axe``: *orientation of changed axe (``x`` or ``y``)*
   - arg[1] ``value``: *value of changed axe*
 
 #### Examples
@@ -53,7 +61,7 @@ xPad.on("update", () => {
 })
 
 xPad.on("buttonUpdate", (name, value) => {
-  // put code
+  if(name === "A") player.jump()
 })
 ```
 
@@ -68,13 +76,12 @@ Includes the following axes like that: `{*name: value}`
 #### Examples
 
 ```js
-xPad.on("axeUpdate", (name, value) => {
-  const prop = name.includes("X") ? "x" : "y"
-  if(name.includes("RIGHT")){
-    player.position[prop] += value * player.vitesse
-  }else{
-    player.pointer[prop] += value * player.sensibility
-  }
+xPad.on("rightStickUpdate", (axe, value) => {
+  player.position[axe] += value * player.vitesse
+})
+
+xPad.on("leftStickUpdate", (axe, value) => {
+  player.pointer[axe] += value * player.sensibility
 })
 ```
 

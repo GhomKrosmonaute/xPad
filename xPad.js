@@ -19,7 +19,7 @@ class XPad {
         if(this.buttonCache[i] !== value){
           this.buttonCache[i] = value
           this.buttons[n] = value
-          this.emit("buttonUpdate", n, value)
+          this.emit("buttonUpdate", n, value, i)
         }
       })
       this.axeNames.forEach((n, i) => {
@@ -27,7 +27,13 @@ class XPad {
         if(this.axeCache[i] !== value){
           this.axeCache[i] = value
           this.axes[n] = value
-          this.emit("axeUpdate", n, value)
+          this.emit("axeUpdate", n, value, i)
+          const axe = name.includes("X") ? "x" : "y"
+          if(name.includes("RIGHT")){
+            this.emit("rightStickUpdate", axe, value)
+          }else{
+            this.emit("leftStickUpdate", axe, value)
+          }
         }
       })
     })

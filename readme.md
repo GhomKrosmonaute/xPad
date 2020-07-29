@@ -13,11 +13,15 @@ Node-like Event emitter for easily usage.
 
 - ``update``: *gamepad loop checking*
 - ``connected``: *Xbox controller detected*
-- ``disconnected``: *controller disconnected*
+- ``disconnected``: *Xbox controller disconnected*
 - ``buttonUpdate``: *button value changed*
   - arg[0] ``name``: *name of changed button*
   - arg[1] ``value``: *value of changed button*
   - arg[2] ``index``: *index of changed button*
+- ``buttonPressed``: *button pressed*
+  - arg[0] ``name``: *name of pressed button*
+- ``buttonReleased``: *button released*
+  - arg[0] ``name``: *name of released button*
 - ``axeUpdate``: *axis value changed*
   - arg[0] ``name``: *name of changed axe*
   - arg[1] ``value``: *value of changed axe*
@@ -54,13 +58,13 @@ Includes the following buttons like that: `{*name: value}`
 #### Examples
 
 ```js
-xPad.on("update", () => {
-  const LT_Value = xPad.buttons["LT"]
-  const LT_IsPressed = LT_Value === 1
-  const UP_IsPressed = !!xPad.buttons.UP
-})
+// get props on your own game loop
+const LT_Value = xPad.buttons["LT"]
+const LT_IsPressed = LT_Value === 1
+const UP_IsPressed = !!xPad.buttons.UP
 
-xPad.on("buttonUpdate", (name, value) => {
+// or use events
+xPad.on("buttonPressed", name => {
   if(name === "A") player.jump()
 })
 ```

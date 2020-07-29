@@ -20,6 +20,8 @@ class XPad {
           this.buttonCache[i] = value
           this.buttons[n] = value
           this.emit("buttonUpdate", n, value, i)
+          if(value === 1) this.emit("buttonPressed", n)
+          else if(value === 0) this.emit("buttonReleased", n)
         }
       })
       this.axeNames.forEach((n, i) => {

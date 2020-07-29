@@ -1,3 +1,5 @@
+![](./favicon.png)
+
 # 🎮 xPad - HTML5 Xbox 360 Gamepad Wrapper
 
 - [Download](https://raw.githubusercontent.com/CamilleAbella/xPad/master/xPad.js)

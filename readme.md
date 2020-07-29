@@ -5,7 +5,7 @@
 
 ## Documentation
 
-### xPad => PseudoEventEmitter
+### xPad: ``PseudoEventEmitter``
 
 Node-like Event emitter for easily usage.
 
@@ -47,7 +47,7 @@ Node-like Event emitter for easily usage.
 </body>
 ```
 
-### xPad.buttons => Object
+### xPad.buttons: ``Object``
 
 Includes the following buttons like that: `{*name: value}`
 
@@ -55,7 +55,7 @@ Includes the following buttons like that: `{*name: value}`
 |---|---|
 | A, B, X, Y, LB, RB, BACK, START, L-STICK, R-STICK, UP, DOWN, LEFT, RIGHT | LT, RT |
 
-#### Examples
+#### Checking of button values
 
 ```js
 // get props on your own game loop
@@ -69,7 +69,7 @@ xPad.on("buttonPressed", name => {
 })
 ```
 
-### xPad.axes => Object
+### xPad.axes: ``Object``
 
 Includes the following axes like that: `{*name: value}`
 
@@ -77,7 +77,7 @@ Includes the following axes like that: `{*name: value}`
 |---|
 | LEFT-X, LEFT-Y, RIGHT-X, RIGHT-Y |
 
-#### Examples
+#### Checking of axes values
 
 ```js
 xPad.on("rightStickUpdate", (axe, value) => {
@@ -89,6 +89,6 @@ xPad.on("leftStickUpdate", (axe, value) => {
 })
 ```
 
-### xPad.updateInterval => number
+### xPad.updateInterval: ``number``
 
 Change the speed of gamepad checking (update event).

@@ -7,33 +7,25 @@
 
 ## Documentation
 
-### xPad: ``PseudoEventEmitter``
+### xPad: ``XPad``
 
 Node-like Event emitter for easily usage.
 
 #### Events
 
-- ``update``: *gamepad loop checking*
-- ``connected``: *Xbox controller detected*
-- ``disconnected``: *Xbox controller disconnected*
-- ``buttonUpdate``: *button value changed*
-  - arg[0] ``name``: *name of changed button*
-  - arg[1] ``value``: *value of changed button*
-  - arg[2] ``index``: *index of changed button*
-- ``buttonPressed``: *button pressed*
-  - arg[0] ``name``: *name of pressed button*
-- ``buttonReleased``: *button released*
-  - arg[0] ``name``: *name of released button*
-- ``axeUpdate``: *axis value changed*
-  - arg[0] ``name``: *name of changed axe*
-  - arg[1] ``value``: *value of changed axe*
-  - arg[2] ``index``: *index of changed axe*
-- ``leftStickUpdate``: *left stick axe value changed*
-  - arg[0] ``axe``: *orientation of changed axe (``x`` or ``y``)*
-  - arg[1] ``value``: *value of changed axe*
-- ``rightStickUpdate``: *right stick axe value changed*
-  - arg[0] ``axe``: *orientation of changed axe (``x`` or ``y``)*
-  - arg[1] ``value``: *value of changed axe*
+On:
+
+- ``update``
+- ``connected``
+- ``disconnected``
+- ``buttonUpdate``, (**name**: ``string``, **value**: ``number``, **index**: ``number``) => ``void``): ``XPad``
+- ``buttonPressed``, (**name**: ``string``, **index**: ``number``) => ``void``): ``XPad``
+- ``buttonReleased``, (**name**: ``string``, **index**: ``number``) => ``void``): ``XPad``
+- ``joysticksUpdate``, (**joysticks**: ``Joysticks``, **index**: ``number``) => ``void``): ``XPad``
+- ``leftJoystickUpdate``, (**joystick**: ``Joystick``, **index**: ``number``) => ``void``): ``XPad``
+- ``rightJoystickUpdate``, (**joystick**: ``Joystick``, **index**: ``number``) => ``void``): ``XPad``
+
+For more detail, please read [this file](./xPad.d.ts)
 
 #### Examples
 
@@ -49,9 +41,7 @@ Node-like Event emitter for easily usage.
 </body>
 ```
 
-### xPad.buttons: ``Object``
-
-Includes the following buttons like that: `{*name: value}`
+### xPad.buttons: ``{ [name: string]: number }``
 
 | `0 \ 1` (boolean) | `0...1` (tension) |
 |---|---|
@@ -71,23 +61,40 @@ xPad.on("buttonPressed", name => {
 })
 ```
 
-### xPad.axes: ``Object``
+### xPad.joysticks: ``Joysticks``
 
-Includes the following axes like that: `{*name: value}`
+```ts
+interface Joysticks {
+  left: Joystick
+  right: Joystick
+}
 
-| `-1...1` ((+-)tension) |
-|---|
-| LEFT-X, LEFT-Y, RIGHT-X, RIGHT-Y |
+interface Joystick {
+  x: number
+  y: number
+}
+```
 
-#### Checking of axes values
+```json
+{
+  "left": {"x": 0, "y": 0},
+  "right": {"x": 0, "y": 0}
+}
+```
+
+#### Checking of joysticks values
 
 ```js
-xPad.on("rightStickUpdate", (axe, value) => {
-  player.position[axe] += value * player.vitesse
+xPad.on("rightJoystickUpdate", joystick => {
+  ["x","y"].forEach(a => {
+    player.position[a] += joystick[a] * player.speed[a]
+  })
 })
 
-xPad.on("leftStickUpdate", (axe, value) => {
-  player.pointer[axe] += value * player.sensibility
+xPad.on("leftJoystickUpdate", joystick => {
+  ["x","y"].forEach(a => {
+    player.pointer[a] += joystick[a] * player.sensitivity[a]
+  })
 })
 ```
 

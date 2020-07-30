@@ -21,6 +21,8 @@
       left: 50%;
       width: 30px;
       height: 30px;
+      display: grid;
+      place-items: center;
     }
     #buttons > div {
       transition: all 100ms ease;
@@ -52,10 +54,14 @@
         <h2>Axis</h2>
         <div id="axis" class="d-flex flex-wrap">
           <div class="m-1 stick LEFT rounded shadow-sm">
-            <div class="rounded shadow-sm bg-secondary"></div>
+            <div class="rounded shadow-sm bg-secondary">
+              <span></span>
+            </div>
           </div>
           <div class="m-1 stick RIGHT rounded shadow-sm">
-            <div class="rounded shadow-sm bg-secondary"></div>
+            <div class="rounded shadow-sm bg-secondary">
+              <span></span>
+            </div>
           </div>
         </div>
       </div>
@@ -92,14 +98,18 @@
       }
     })
 
-    xPad.on("axeUpdate", (name, value) => {
-      const prop = name.includes("X") ? "left" : "top"
-      const side = name.includes("RIGHT") ? "RIGHT" : "LEFT"
-      const stick = document.querySelector(".stick." + side + " > div")
-      stick.style[prop] = String(50 + 50 * value) + "%"
+    xPad.on("joysticksUpdate", joysticks => {
+      for(const side in joysticks) {
+        const joystickViewer = document.querySelector(`.stick.${side.toUpperCase()} > div`)
+        for (const orientation in joysticks[side]) {
+          const percent = String(50 + 50 * joysticks[side][orientation]) + "%"
+          const prop = orientation === "x" ? "left" : "top"
+          joystickViewer.style[prop] = percent
+        }
+      }
     })
 
-    xPad.buttonNames.forEach(name => {
+    xPad.buttonsConfig.forEach(name => {
       const button = document.createElement("div")
       button.className = "m-1 p-2 badge badge-dark"
       button.innerText = name

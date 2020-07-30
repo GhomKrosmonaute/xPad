@@ -1,55 +1,55 @@
 class XPad {
   
-  constructor(buttonNames, axeNames) {
+  /** @type {XPad} */
+  constructor(buttonsConfig, joysticksConfig) {
     this.emitters = {}
     
     this.buttons = {}
-    this.buttonCache = []
-    this.buttonNames = buttonNames
+    this.buttonsConfig = buttonsConfig
     
-    this.axes = {}
-    this.axeCache = []
-    this.axeNames = axeNames
+    this.joysticks = {left: {x: 0, y: 0}, right: {x: 0, y: 0}}
+    this.joysticksConfig = joysticksConfig
   
     this.updateInterval = 10
     
     this.on("update", () => {
-      this.buttonNames.forEach((n, i) => {
-        const value = XPad.getButtonValue(this.gamepad.buttons[i])
-        if(this.buttonCache[i] !== value){
-          this.buttonCache[i] = value
-          this.buttons[n] = value
-          this.emit("buttonUpdate", n, value, i)
-          if(value === 1) this.emit("buttonPressed", n)
-          else if(value === 0) this.emit("buttonReleased", n)
+      this.buttonsConfig.forEach((name, index) => {
+        const value = XPad.getButtonValue(this.gamepad.buttons[index])
+        if(this.buttons[name] !== value){
+          this.buttons[name] = value
+          this.emit("buttonUpdate", name, value, index)
+          if(value === 1) this.emit("buttonPressed", name, index)
+          else if(value === 0) this.emit("buttonReleased", name, index)
         }
       })
-      this.axeNames.forEach((n, i) => {
-        const value = this.gamepad.axes[i]
-        if(this.axeCache[i] !== value){
-          this.axeCache[i] = value
-          this.axes[n] = value
-          this.emit("axeUpdate", n, value, i)
-          const axe = name.includes("X") ? "x" : "y"
-          if(name.includes("RIGHT")){
-            this.emit("rightStickUpdate", axe, value)
-          }else{
-            this.emit("leftStickUpdate", axe, value)
+      for(const side in this.joysticksConfig){
+        for(const orientation in this.joysticksConfig[side]){
+          const index = this.joysticksConfig[side][orientation]
+          const value = this.gamepad.axes[index]
+          if(this.joysticks[side][orientation] !== value){
+            this.joysticks[side][orientation] = value
+            this.emit("joysticksUpdate", this.joysticks, index)
+            this.emit(
+              side + "joystickUpdate",
+              this.joysticks[side],
+              index
+            )
           }
         }
-      })
+      }
     })
   
     window.addEventListener("gamepadconnected", (event) => {
       if(event.gamepad.id === "xinput") {
-        this.buttonNames.forEach((name, i) => {
-          this.buttonCache[i] = XPad.getButtonValue(event.gamepad.buttons[i])
-          this.buttons[name] = this.buttonCache[i]
+        this.buttonsConfig.forEach((name, i) => {
+          this.buttons[name] = XPad.getButtonValue(event.gamepad.buttons[i])
         })
-        this.axeNames.forEach((name, i) => {
-          this.axeCache[i] = event.gamepad.axes[i]
-          this.axes[name] = this.axeCache[i]
-        })
+        for(const side in this.joysticksConfig){
+          for(const orientation in this.joysticksConfig[side]) {
+            const index = this.joysticksConfig[side][orientation]
+            this.joysticks[side][orientation] = event.gamepad.axes[index]
+          }
+        }
         this.update = setInterval(() => this.emit("update"), this.updateInterval)
         this.gamepad = event.gamepad
         this.emit("connected")
@@ -79,6 +79,7 @@ class XPad {
   once(eventName, callback){
     callback.onlyOneTime = true
     this.on(eventName, callback)
+    return this
   }
   
   emit(eventName, ...args){
@@ -88,6 +89,7 @@ class XPad {
           callback(...args)
           return !callback.onlyOneTime
         })
+    return this
   }
   
   static getButtonValue(b) {
@@ -96,13 +98,14 @@ class XPad {
 }
 
 // Xbox Gamepad
+/** @type {XPad} */
 const xPad = new XPad([
   "A","B","X","Y",
   "LB","RB","LT","RT",
   "BACK","START",
   "L-STICK","R-STICK",
   "UP","DOWN","LEFT","RIGHT"
-],[
-  "LEFT-X","LEFT-Y",
-  "RIGHT-X","RIGHT-Y"
-])
+],{
+  left: {x: 0, y: 1},
+  right: {x: 2, y: 3}
+})

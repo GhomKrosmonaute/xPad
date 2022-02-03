@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "rootDir": "dist",
+    "lib": ["dom", "esnext"],
+  }
+}

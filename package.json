@@ -1,0 +1,32 @@
+{
+  "name": "xpad",
+  "version": "1.0.0",
+  "description": "🎮 xPad - HTML5 Xbox 360 Gamepad Wrapper",
+  "main": "dist/index.js",
+  "browser": {
+    "path": "path-browserify"
+  },
+  "scripts": {
+    "build": "esbuild ./src --bundle --outfile=dist/xPad.js --minify --sourcemap --target=chrome58,firefox57,safari11,edge16",
+    "test": "tsc --noEmit",
+    "format": "prettier --write src"
+  },
+  "prettier": {
+    "semi": false
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GhomKrosmonaute/xPad.git"
+  },
+  "keywords": [],
+  "author": "ghom",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GhomKrosmonaute/xPad/issues"
+  },
+  "homepage": "https://github.com/GhomKrosmonaute/xPad#readme",
+  "dependencies": {
+    "esbuild": "^0.14.18",
+    "typescript": "^4.5.5"
+  }
+}

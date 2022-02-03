@@ -37,6 +37,10 @@ declare interface Joystick {
   y: number
 }
 
+declare interface Events {
+
+}
+
 declare type EventName =
     "update"
   | "connected"

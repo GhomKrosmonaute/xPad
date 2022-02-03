@@ -69,11 +69,9 @@
   </div>
   <script src="xPad.js"></script>
   <script>
-
     const
       detection = document.getElementById("detection"),
-      buttons = document.getElementById("buttons"),
-      axis = document.getElementById("axis")
+      buttons = document.getElementById("buttons")
 
     xPad.on("connected", () => {
       detection.className = "alert text-center alert-success m-0 p-1"
